@@ -1,0 +1,52 @@
+#!/usr/bin/python
+ 
+# This script first executes the command passed as argument, then, when the command
+# is done, it sends you a yo
+#
+# All you need to do is define the YO_USER and YO_TOKEN environment variables with:
+# YO_USER: your Yo username
+# YO_TOKEN: the Yo API token corresponding to the Yo API account you want to receive
+# Yos from, don't forget to subscribe to your accounts.
+#
+# Uses:
+# yo ls -al
+# yo sleep 10s
+# yo make
+# yo ENV_VAR=FOO make
+# ...
+ 
+import urllib
+import os
+import sys
+import subprocess
+ 
+def sendYo():
+      # Sends a Yo to the user defined in the envrionement variable YO_USER with the
+      # Yo account corresponding to the token defined in the environement variable
+      # YO_TOKEN.
+      user = os.environ.get('YO_USER')
+         token = os.environ.get('YO_TOKEN')
+            if not user:
+                  print 'YO_USER undefined'
+                        return
+                           if not token:
+                                 print 'YO_TOKEN undefined'
+                                       return
+                                          data = {
+                                                   'api_token':token,
+                                                         'username':user
+                                                            }
+   request = urllib.urlopen('http://api.justyo.co/yo/',urllib.urlencode(data))
+      res = request.read()
+      if res!='{"result": "OK"}':
+            print 'Yo error: '
+                  print res
+                   
+                  command = ' '.join(sys.argv[1:])
+# Get the command back
+                  process = subprocess.Popen(command,shell=True)
+# Execute the command
+   process.wait()
+# Wait for the command execution to finish
+   sendYo()
+# Send a yo
