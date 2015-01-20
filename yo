@@ -38,7 +38,7 @@ def sendYo():
    }
    request = urllib.urlopen('http://api.justyo.co/yo/',urllib.urlencode(data))
    res = request.read()
-   if res!='{"result": "OK"}':
+   if not '"success": true' in res:
       print 'Yo error: '
       print res
                    
